@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,12 +21,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -42,47 +49,79 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import com.mayank122.recipe_tracker_app.ui.theme.Recipe_Tracker_AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge()  // Assuming this is for edge-to-edge UI
         setContent {
             Recipe_Tracker_AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
+                    NavigationBar {
+                        items.forEachIndexed { index, item ->
+                            NavigationBarItem(
+                                icon = { Icon(icons[index], contentDescription = item) },
+                                label = { Text(item) },
+                                selected = false,
+                                onClick = {}
+                            )
+                        }
+                    }
+                }) { innerPadding ->
                     Recipe_main(
                         name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding) // Add padding to respect scaffold's inner padding
                     )
+
                 }
             }
         }
     }
 }
 
+val icons = listOf(
+    Icons.Default.Home,
+    Icons.Default.Favorite,
+    Icons.Default.Person
+)
+
+val items = listOf("Home", "Favorite", "Profile")
+
+
+
+
 @Composable
 fun Recipe_main(name: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        TopBar(title = "Recipe Tracker")
-
-        // Small Heading Section
-        HeadingSection(text = "Find the Best Recipe for Cooking")
-
-        SearchBar() // Adding Search Bar
-
-
-        PopularCategorySection() // Popular Category Section
-
-    }
+    // Scaffold automatically sticks TopBar to the top
+    Scaffold(
+        topBar = {
+            TopBar(title = "Recipe Tracker") // The top bar will be sticky here
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding) // Inner padding for scaffold content area
+                    .verticalScroll(rememberScrollState()) // This makes the content below scrollable
+            ) {
+                // Remaining content below the top bar will scroll
+                HeadingSection(text = "Find the Best Recipe for Cooking")
+                SearchBar() // Adding Search Bar
+                PopularCategorySection() // Popular Category Section
+                TrendingSection() // Trending Section
+                CookingTipsSection() // Cooking Tips Section
+            }
+        }
+    )
 }
+
 
 @Composable
 fun TopBar(title: String) {
@@ -233,8 +272,177 @@ fun CategoryItem(name: String, imageRes: Int) {
     }
 }
 
+@Composable
+fun TrendingSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Trending Recipes",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            getTrendingRecipes().map { recipe ->
+                TrendingItem(recipe)
+            }
+        }
+    }
+}
+
+// UI function for each trending item
+@Composable
+fun TrendingItem(recipe: TrendingRecipe) {
+    Card(
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+        modifier = Modifier
+            .width(240.dp) // Large image width
+            .height(240.dp) // Height for the container
+    ) {
+        Box {
+            Image(
+                painter = painterResource(id = recipe.imageRes),
+                contentDescription = recipe.name,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomStart)
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .padding(8.dp)
+            ) {
+                Column {
+                    Text(
+                        text = recipe.name,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = recipe.restaurant,
+                        fontSize = 15.sp,
+                        color = Color.LightGray
+                    )
+                }
+            }
+        }
+    }
+}
+
+// 🔹 Data function (Fixed Drawable References)
+fun getTrendingRecipes(): List<TrendingRecipe> {
+    return listOf(
+        TrendingRecipe("Sushi", "Tokyo Diner", R.drawable.r1),
+        TrendingRecipe("Burger", "Fast Bites", R.drawable.r2),
+        TrendingRecipe("Rice", "Fast Bites", R.drawable.r3)
+
+    )
+}
+
+// 🔹 Data Model (with correct annotation)
+data class TrendingRecipe(
+    val name: String,
+    val restaurant: String,
+    @DrawableRes val imageRes: Int
+)
 
 
+@Composable
+fun CookingTipsSection() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .padding(bottom = 80.dp)
+    ) {
+        Text(
+            text = "Cooking Tips & Tricks",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()) // Enables horizontal scrolling
+                .padding(bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val tips = getCookingTips()
+            tips.forEach { tip ->
+                CookingTipCard(tip)
+            }
+        }
+    }
+}
+
+@Composable
+fun CookingTipCard(tip: CookingTip) {
+    Card(
+        modifier = Modifier
+            .width(200.dp) // Set a fixed width for each tip card
+            .padding(end = 12.dp),
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            Image(
+                painter = painterResource(id = tip.imageRes),
+                contentDescription = tip.title,
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = tip.title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = tip.shortDescription,
+                fontSize = 14.sp,
+                color = Color.Gray,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+// Data Class for Cooking Tips
+data class CookingTip(val title: String, val shortDescription: String, val imageRes: Int)
+
+// Sample Function to Get Tips
+fun getCookingTips(): List<CookingTip> {
+    return listOf(
+        CookingTip("How to Chop Onions", "Avoid tears with this simple trick!", R.drawable.r1),
+        CookingTip("Perfect Boiled Eggs", "Get the perfect texture every time.", R.drawable.r2)
+    )
+}
 
 
 @Preview(showBackground = true)
