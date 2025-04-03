@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -55,32 +57,21 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.mayank122.recipe_tracker_app.ui.theme.Recipe_Tracker_AppTheme
+import com.mayank122.recipe_tracker_app.viewmodels.Recipe_Tracker_ViewModel
+import com.mayank122.recipe_tracker_app.views.AppNavigation
 
 class MainActivity : ComponentActivity() {
+    private  val Recipe_Tracker_ViewModel:Recipe_Tracker_ViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()  // Assuming this is for edge-to-edge UI
         setContent {
             Recipe_Tracker_AppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
-                    NavigationBar {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                icon = { Icon(icons[index], contentDescription = item) },
-                                label = { Text(item) },
-                                selected = false,
-                                onClick = {}
-                            )
-                        }
-                    }
-                }) { innerPadding ->
-                    Recipe_main(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding) // Add padding to respect scaffold's inner padding
-                    )
-
-                }
+                AppNavigation()
             }
         }
     }
@@ -96,6 +87,23 @@ val items = listOf("Home", "Favorite", "Profile")
 
 
 
+// Bottom Navigation
+@Composable
+fun BottomNavigationBar(navController: NavController) {
+    val items = listOf("home", "details")
+    val icons = listOf(Icons.Default.Home, Icons.Default.Info)
+
+    NavigationBar {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                icon = { Icon(icons[index], contentDescription = item) },
+                label = { Text(item) },
+                selected = false,
+                onClick = { navController.navigate(item) }
+            )
+        }
+    }
+}
 
 @Composable
 fun Recipe_main(name: String, modifier: Modifier = Modifier) {
@@ -178,11 +186,11 @@ fun SearchBar() {
             .fillMaxWidth() // Take full width
             .padding(16.dp), // Padding around search bar
         shape = RoundedCornerShape(16.dp), // Apply rounded corners with 16dp radius
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = Color.White, // Background color for TextField
-            focusedBorderColor = Color(0xFF6200EE), // Border color when focused
-            unfocusedBorderColor = Color.Gray // Border color when unfocused
-        )
+//        colors = TextFieldDefaults.outlinedTextFieldColors(
+//            containerColor = Color.White, // Background color for TextField
+//            focusedBorderColor = Color(0xFF6200EE), // Border color when focused
+//            unfocusedBorderColor = Color.Gray // Border color when unfocused
+//        )
     )
 }
 
@@ -445,10 +453,11 @@ fun getCookingTips(): List<CookingTip> {
 }
 
 
+// Preview with Navigation
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     Recipe_Tracker_AppTheme {
-        Recipe_main("Android")
+        AppNavigation()
     }
 }
