@@ -22,13 +22,13 @@ import java.nio.file.WatchEvent.Modifier
 @Composable
 fun AppNavigation()
 {
-//    val navController =  rememberNavController()
-//
-//    NavHost(navController, startDestination = "home"){
-//        composable("home") { HomeScreen(navController)  }
-//        composable("second") { ItemScrren(navController)  }
-//
-//    }
+    val navController =  rememberNavController()
+
+    NavHost(navController, startDestination = "home"){
+        composable("home") { HomeScreen(navController)  }
+        composable("second") { ItemScrren(navController)  }
+
+    }
 }
 
 // Navigation Setup
