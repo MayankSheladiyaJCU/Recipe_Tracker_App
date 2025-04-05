@@ -3,8 +3,8 @@ import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mayank122.recipe_tracker_app.data.User
-import com.mayank122.recipe_tracker_app.data.Recipe_TrackerDB
-import com.mayank122.recipe_tracker_app.data.Recipe_TrackerDao
+import com.mayank122.recipe_tracker_app.data.LocalDatabase
+import com.mayank122.recipe_tracker_app.data.UserStorage
 
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -20,9 +20,9 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class Recipe_TrackerTest {
-    private lateinit var db: Recipe_TrackerDB
+    private lateinit var db: LocalDatabase
 
-    private lateinit var Recipe_TrackerDao: Recipe_TrackerDao
+    private lateinit var Recipe_TrackerDao: UserStorage
 
     // Context of the app under test.
     val appContext = InstrumentationRegistry.getInstrumentation().targetContext
@@ -35,7 +35,7 @@ class Recipe_TrackerTest {
 
         // process is killed.
 
-        db = Room.inMemoryDatabaseBuilder(appContext, Recipe_TrackerDB::class.java)
+        db = Room.inMemoryDatabaseBuilder(appContext, LocalDatabase::class.java)
 
             // Allowing main thread queries, just for testing.
 
@@ -43,7 +43,7 @@ class Recipe_TrackerTest {
 
             .build()
 
-        Recipe_TrackerDao = db.Recipe_TrackerDao()
+        Recipe_TrackerDao = db.recipeDao()
 
     }
 
