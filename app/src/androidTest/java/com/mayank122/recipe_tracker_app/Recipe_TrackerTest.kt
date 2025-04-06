@@ -31,9 +31,7 @@ class Recipe_TrackerTest {
 
     fun createDb() {
 
-        // Using an in-memory database because the information stored here disappears when the
 
-        // process is killed.
 
         db = Room.inMemoryDatabaseBuilder(appContext, LocalDatabase::class.java)
 
@@ -65,19 +63,7 @@ class Recipe_TrackerTest {
 
     @Throws(Exception::class)
 
-    //runBlocking:
 
-    //- Blocks the current thread until the coroutine completes.
-
-    //- Used to bridge synchronous and asynchronous code.
-
-    //- Creates a scope for coroutines, controlling their lifetime.
-
-    //Key differences:
-
-    //- suspend defines asynchronous functions.
-
-    //- runBlocking executes coroutines synchronously.
 
     fun insertAndGetUser() = runBlocking {
 

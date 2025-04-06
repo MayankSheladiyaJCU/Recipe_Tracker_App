@@ -41,23 +41,6 @@ class FavoriteViewModel : ViewModel() {
     }
 }
 
-// Favorite Screen UI
-//@Composable
-//fun FavoriteScreen(viewModel: FavoriteViewModel = viewModel()) {
-//    Scaffold(
-//        topBar = {
-//            TopAppBar(title = { Text("Favorites") })
-//        }
-//    ) {
-//        LazyColumn(
-//            modifier = Modifier.fillMaxSize().padding(16.dp)
-//        ) {
-//            items(viewModel.favorites) { item ->
-//                FavoriteItemRow(item, onRemove = { viewModel.removeFromFavorites(item) })
-//            }
-//        }
-//    }
-//}
 
 // UI for each favorite item
 @Composable
