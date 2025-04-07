@@ -11,6 +11,7 @@ import com.inconceptlabs.designsystem.components.core.Text
 import com.inconceptlabs.designsystem.theme.AppTheme
 import com.mayank122.recipe_tracker_app.model.IngredientModel
 
+// Display the
 @Composable
 fun IngredientItem(
     item: IngredientModel,

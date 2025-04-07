@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// Display Category Item
 @Composable
 fun CategoryItem(name: String, imageRes: Int, onClick: () -> Unit) {
     // Wrap image and text inside a Column with border

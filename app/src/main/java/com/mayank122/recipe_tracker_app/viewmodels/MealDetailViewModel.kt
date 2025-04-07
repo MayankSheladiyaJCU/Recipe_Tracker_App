@@ -50,7 +50,7 @@ class MealDetailViewModel(
         initialValue = false
     )
 
-
+// Fetch the Meal data from API
     fun fetchMeal(mealId: String) {
         if (isLoading || (meal?.idMeal == mealId && meal != null)) {
             return

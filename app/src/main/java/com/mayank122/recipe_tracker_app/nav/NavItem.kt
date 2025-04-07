@@ -4,7 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-
+// Bottom Navigation Bar
 sealed class NavItem {
     object Home :
         Item(path = NavPath.HOME.toString(), title = NavTitle.HOME, icon = Icons.Default.Home)

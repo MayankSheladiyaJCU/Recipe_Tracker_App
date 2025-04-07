@@ -2,7 +2,7 @@ package com.mayank122.recipe_tracker_app.model
 
 import com.mayank122.recipe_tracker_app.data.BookmarkedMeal
 
-
+// Those data from Detail Recipe Screen has lots of details
 data class MealDetailResponse(val meals: List<MealDetail>?)
 
 data class MealDetail(

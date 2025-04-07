@@ -56,6 +56,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// heading section
 @Composable
 fun HeadingSection(text: String) {
     Column(
@@ -74,6 +75,7 @@ fun HeadingSection(text: String) {
     }
 }
 
+// Search bar code
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(navController: NavHostController) {
@@ -101,6 +103,7 @@ fun SearchBar(navController: NavHostController) {
     )
 }
 
+// Popular category
 @Composable
 fun PopularCategorySection(navController: NavHostController) {
     Column(
@@ -122,6 +125,7 @@ fun PopularCategorySection(navController: NavHostController) {
     }
 }
 
+//Category display
 @Composable
 fun CategoryRow(onCategorySelected: (String) -> Unit) {
     val scrollState = rememberScrollState()
@@ -144,7 +148,7 @@ fun CategoryRow(onCategorySelected: (String) -> Unit) {
     }
 }
 
-
+// Trending section
 @Composable
 fun TrendingSection(navController: NavHostController) {
     Column(
@@ -173,7 +177,7 @@ fun TrendingSection(navController: NavHostController) {
     }
 }
 
-
+// Cooking Tip Section
 @Composable
 fun CookingTipsSection(navController: NavHostController) {
     Column(
